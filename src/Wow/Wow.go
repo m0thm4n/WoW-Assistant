@@ -8,6 +8,8 @@ import (
   "log"
 )
 
+
+
 func getClient() *blizzard.Client {
   ctx := context.Background()
 

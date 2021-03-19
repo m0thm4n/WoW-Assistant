@@ -1,7 +1,7 @@
 package Models
 
 import (
-	"Podify/src/Config"
+	"WoW-Assistant/src/Config"
 	"fmt"
 
 	_ "github.com/go-sql-driver/mysql"

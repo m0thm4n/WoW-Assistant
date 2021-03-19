@@ -20,9 +20,9 @@
     <!-- Add your site or application content here -->
     <div class="container">
       <form>
-        <label for="numberOfPlayersOnTeams">Choose the number of players on teams: </label>
-        <select name="auctionHouse" id="auctionHouse" onchange="ShowHideDiv()">
-          <option value="Pick">Realm</option>
+        <label for="realmWanted">Choose the realm you want to view the auction house for: </label>
+        <select name="realm" id="realm" onchange="ShowHideDiv()">
+          <option value="pick">Realm</option>
           <option value="aegwynn">Aegwynn</option>
           <option value="aerie peak">Aerie Peak</option>
           <option value="agamaggan">Agamaggan</option>
@@ -181,45 +181,87 @@
           <option value="norgannon">Norgannon</option>
           <option value="onyxia">Onyxia</option>
           <option value="perenolde">Perenolde</option>
-          <option value="kirin tor">Kirin Tor</option>
-          <option value="kirin tor">Kirin Tor</option>
+          <option value="proudmoore">Proudmoore</option>
+          <option value="quel'thalas">Quel'Thalas</option>
+          <option value="quel'dorei">Quel'dorei</option>
+          <option value="ragnaros">Ragnaros</option>
+          <option value="ravencrest">Ravencrest</option>
+          <option value="ravenholdt">Ravenholdt</option>
+          <option value="rexxar">Rexxar</option>
+          <option value="rivendare">Rivendare</option>
+          <option value="runetotem">Runetotem</option>
+          <option value="sargeras">Sargeras</option>
+          <option value="saurfang">Saurfang</option>
+          <option value="scarlet crusade">Scarlet Crusade</option>
+          <option value="scolla">Scilla</option>
+          <option value="sen'jin">Sen'jin</option>
+          <option value="sentinels">Sentinels</option>
+          <option value="shadow council">Shadow Council</option>
+          <option value="shadowmoon">Shadowmoon</option>
+          <option value="shadowsong">Shadowsong</option>
+          <option value="shandris">Shandris</option>
+          <option value="shattered halls">Shattered Halls</option>
+          <option value="shattered hand">Shattered Hand</option>
+          <option value="shu'halo">Shu'halo</option>
+          <option value="silver hand">Silver Hand</option>
+          <option value="silvemoon">Silvermoon</option>
+          <option value="sister of elune">Sister of Elune</option>
+          <option value="skullcrusher">Skullcrusher</option>
+          <option value="skywall">Skywall</option>
+          <option value="smolderthorn">Smolderthorn</option>
+          <option value="spinebreaker">Spinebreaker</option>
+          <option value="spirestone">Spirestone</option>
+          <option value="staghelm">Staghelm</option>
+          <option value="steamwheedle cartel">Steamwheedle Cartel</option>
+          <option value="stonemaul">Stonemaul</option>
+          <option value="stormrage">Stormrage</option>
+          <option value="stormreaver">Stormreaver</option>
+          <option value="stormscale">Stormscale</option>
+          <option value="suramar">Suramar</option>
+          <option value="tanaris">Tanaris</option>
+          <option value="terokkar">Terokkar</option>
+          <option value="thaurissan">Thaurissan</option>
+          <option value="the forgotten coast">The Forgotten Coast</option>
+          <option value="the scryers">The Scryers</option>
+          <option value="the underbog">The Underbog</option>
+          <option value="the venture co">The Venture Co</option>
+          <option value="thorium brotherhood">Thorium Brotherhood</option>
+          <option value="thrall">Thrall</option>
+          <option value="thunderhorn">Thunderhorn</option>
+          <option value="thunderlord">Thunderlord</option>
+          <option value="tichondrius">Tichondrius</option>
+          <option value="tol barad">Tol Barad</option>
+          <option value="tortheldrin">Tortheldrin</option>
+          <option value="trollbane">Trollbane</option>
+          <option value="turalyon">Turalyon</option>
+          <option value="twisting nether">Twisting Nether</option>
+          <option value="uldaman">Uldaman</option>
+          <option value="uldum">Uldum</option>
+          <option value="undermine">Undermine</option>
+          <option value="ursin">Ursin</option>
+          <option value="uther">Uther</option>
+          <option value="vashj">Vashj</option>
+          <option value="vek'nilash">Vek'nilash</option>
+          <option value="velen">Velen</option>
+          <option value="warsong">Warsong</option>
+          <option value="whisperwind">Whisperwind</option>
+          <option value="wildhammer">Wildhammer</option>
+          <option value="windrunner">Wildrunner</option>
+          <option value="winterhoof">Winterhoof</option>
+          <option value="wyrmrest accord">Wyrmrest Accord</option>
+          <option value="ysera">Ysera</option>
+          <option value="ysondre">Ysondre</option>
+          <option value="zangarmarsh">Zangarmarsh</option>
+          <option value="zul'jin">Zul'jin</option>
+          <option value="zuluhead">Zuluhead</option>
         </select>
         <br />
       </form>
     </div>
 
-    <div class="container" id="teamPicker2v2" style="display: none">
-      <form>
-        <label for="Players for the customs">Players</label>
-        <br />
-        <div class="container">
-          <label for="players">Player 1</label>
-          <br />
-          <input id="player1" name="players2v2" class="players2v2" rows="1" cols="50" />
-          <br />
-          <label for="players">Player 2</label>
-          <br />
-          <input id="player2" name="players2v2" class="players2v2" rows="1" cols="50" />
-          <br />
-          <label for="players">Player 3</label>
-          <br />
-          <input id="player3" name="players2v2" class="players2v2" rows="1" cols="50" />
-          <br />
-          <label for="players">Player 4</label>
-          <br />
-          <input id="player4" name="players2v2" class="players2v2" rows="1" cols="50" />
-          <br />
-        </div>
-
-        <br />
-
-        <button type="button" id="playerSubmit2v2" name="Submit" onclick="randomize2v2(); ShowRandomTeams2v2();">Submit</button>
-
-        <br />
-        <br />
-
-        <input type="button" value="Clear Teams" id="clearTeams2v2" />
-      </form>
+    <div class="container" id="auctionHouse" style="display: none">
+      <br />
+      <p>test</p>
     </div>
 
     {{template "templates/footer" .}}
@@ -227,6 +269,7 @@
     <script src="js/vendor/modernizr-3.11.2.min.js"></script>
     <script src="js/plugins.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/auction.js"></script>
 
     <!-- Google Analytics: change UA-XXXXX-Y to be your site's ID. -->
     <script>

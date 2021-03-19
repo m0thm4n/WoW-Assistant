@@ -1,7 +1,7 @@
 package Controllers
 
 import (
-	"Podify/src/Models"
+	"WoW-Assistant/src/Models"
 	"fmt"
 	"net/http"
 

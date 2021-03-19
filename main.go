@@ -1,9 +1,9 @@
 package main
 
 import (
-  "Podify/src/Config"
-  "Podify/src/Models"
-  "Podify/src/Routes"
+  "WoW-Assistant/src/Config"
+  "WoW-Assistant/src/Models"
+  "WoW-Assistant/src/Routes"
   "fmt"
   "github.com/jinzhu/gorm"
 )

@@ -1,7 +1,7 @@
 package Routes
 
 import (
-  "Podify/src/Controllers"
+  "WoW-Assistant/src/Controllers"
   "github.com/gin-gonic/gin"
   // "github.com/gin-contrib/multitemplate"
   "net/http"

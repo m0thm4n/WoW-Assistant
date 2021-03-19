@@ -264,6 +264,8 @@ func SetupRouter() *gin.Engine {
 
   r.LoadHTMLGlob("templates/*.gohtml")
 
+
+
   r.Static("/img", "templates/img/")
   r.Static("/css", "templates/css/")
   r.Static("/js", "templates/js/")
@@ -277,6 +279,7 @@ func SetupRouter() *gin.Engine {
   r.GET("/auction", func(c *gin.Context) {
     c.HTML(http.StatusOK, "auction.gohtml", gin.H{
       "title": "Auction House",
+      "realms": realms,
     })
   })
 

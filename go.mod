@@ -22,6 +22,6 @@ require (
 	golang.org/x/sys v0.0.0-20210317225723-c4fcb01b228e // indirect
 	golang.org/x/term v0.0.0-20210317153231-de623e64d2a6 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
-	gopkg.in/rethinkdb/rethinkdb-go.v6 v6.2.1 // indirect
+	gopkg.in/rethinkdb/rethinkdb-go.v6 v6.2.1
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )

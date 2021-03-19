@@ -4,6 +4,7 @@ import (
   "WoW-Assistant/src/Config"
   "WoW-Assistant/src/Models"
   "WoW-Assistant/src/Routes"
+  // "WoW-Assistant/src/Wow"
   "fmt"
   "github.com/jinzhu/gorm"
 )
@@ -28,6 +29,9 @@ func main() {
   //    quantity: 21000,
   //    time left: VERY_LONG
   // }
+
+  auctions := Routes.WowAuctions("aegwynn")
+  fmt.Println(auctions.Auctions[0])
 
   // running
 	r.Run()

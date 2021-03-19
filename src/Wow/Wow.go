@@ -4,6 +4,7 @@ import (
   "fmt"
   "github.com/FuzzyStatic/blizzard/v2"
   "context"
+  "github.com/FuzzyStatic/blizzard/v2/wowgd"
   "log"
 )
 
@@ -20,7 +21,8 @@ func getClient() *blizzard.Client {
   return blizz
 }
 
-func WowAuctions(realmToGet string) {
+// WowAuctions gets all auctions from a realm
+func WowAuctions(realmToGet string) *wowgd.AuctionHouse {
   ctx := context.Background()
 
   client := getClient()
@@ -35,5 +37,5 @@ func WowAuctions(realmToGet string) {
     log.Fatal(err)
   }
 
-  fmt.Println(wowAuctions)
+  return wowAuctions
 }

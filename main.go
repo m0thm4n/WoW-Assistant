@@ -1,24 +1,23 @@
 package main
 
 import (
-  "WoW-Assistant/src/Config"
-  "WoW-Assistant/src/Models"
   "WoW-Assistant/src/Routes"
+  "WoW-Assistant/src/Wow"
+
   // "WoW-Assistant/src/Wow"
   "fmt"
-  "github.com/jinzhu/gorm"
 )
 
 var err error
 
 func main() {
-	Config.DB, err = gorm.Open("mysql", Config.DbURL(Config.BuildDBConfig()))
-	if err != nil {
-		fmt.Println("Status: ", err)
-	}
-
-	defer Config.DB.Close()
-	Config.DB.AutoMigrate(&Models.User{})
+	//Config.DB, err = gorm.Open("mysql", Config.DbURL(Config.BuildDBConfig()))
+	//if err != nil {
+	//	fmt.Println("Status: ", err)
+	//}
+  //
+	//defer Config.DB.Close()
+	//Config.DB.AutoMigrate(&Models.User{})
 
 	r := Routes.SetupRouter()
 
@@ -30,7 +29,7 @@ func main() {
   //    time left: VERY_LONG
   // }
 
-  auctions := Routes.WowAuctions("aegwynn")
+  auctions := Wow.WowAuctions("aegwynn")
   fmt.Println(auctions.Auctions[0])
 
   // running

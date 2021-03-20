@@ -2,14 +2,13 @@ package Routes
 
 import (
   "WoW-Assistant/src/Controllers"
-  "context"
+  "WoW-Assistant/src/Wow"
+  "encoding/json"
+
+  // "WoW-Assistant/src/Wow"
   "fmt"
-  "github.com/FuzzyStatic/blizzard/v2"
-  "github.com/FuzzyStatic/blizzard/v2/wowgd"
   "github.com/gin-gonic/gin"
   "log"
-
-  "html/template"
   // "github.com/gin-contrib/multitemplate"
   "net/http"
 )
@@ -245,6 +244,12 @@ var realms = map[string]interface{}{
   "Zuluhead": "zuluhead",
 }
 
+type Realm struct {
+  RealmName string `form:"realm-name"`
+}
+
+var realmStruct Realm
+
 // SetupRouter ... Configure routes
 func SetupRouter() *gin.Engine {
   // render := multitemplate.NewRenderer()
@@ -258,13 +263,7 @@ func SetupRouter() *gin.Engine {
   //
   //server.LoadHTMLGlob("templates/*.gohtml")
 
-  r.SetFuncMap(template.FuncMap{
-    "auction": WowAuctions,
-  })
-
   r.LoadHTMLGlob("templates/*.gohtml")
-
-
 
   r.Static("/img", "templates/img/")
   r.Static("/css", "templates/css/")
@@ -276,11 +275,50 @@ func SetupRouter() *gin.Engine {
     })
   })
 
-  r.GET("/auction", func(c *gin.Context) {
-    c.HTML(http.StatusOK, "auction.gohtml", gin.H{
-      "title": "Auction House",
+  r.GET("/realm", func(c *gin.Context) {
+    c.HTML(http.StatusOK, "auctionlist.gohtml", gin.H{
+      "title": "Realm List",
       "realms": realms,
     })
+  })
+
+  r.POST("/realm", func(c *gin.Context) {
+    err := c.Request.ParseForm()
+    if err != nil {
+      log.Fatal(err)
+    }
+
+    realmStruct.RealmName = c.Request.FormValue("realm")
+
+    // realmStruct.RealmName = realm
+
+    c.Redirect(301, "http://localhost:8080/auction")
+  })
+
+  r.GET("/auction", func(c *gin.Context) {
+    fmt.Println(realmStruct.RealmName)
+
+    auctionHouseList := Wow.WowAuctions(realmStruct.RealmName)
+
+    fmt.Println(auctionHouseList.Auctions[0])
+
+    jsonAuctions, err := json.Marshal(auctionHouseList.Auctions)
+    if err != nil {
+      log.Fatal(err)
+    }
+
+    c.HTML(http.StatusOK, "auction.gohtml", gin.H{
+      "title": "Auction House",
+      "auctions": auctionHouseList,
+    })
+
+    c.JSON(200, gin.H{
+      "code": http.StatusOK,
+      "message": string(jsonAuctions),
+    })
+    if err != nil {
+      log.Fatal(err)
+    }
   })
 
 	apiRoutes := r.Group("/api")
@@ -299,36 +337,4 @@ func SetupRouter() *gin.Engine {
   // }
 
 	return r
-}
-
-func getClient() *blizzard.Client {
-  ctx := context.Background()
-
-  blizz := blizzard.NewClient("d2a18a7c4f364725822fc2ef3740ecc5", "Bv5t7l2AifIWsgESnosKhUbYnlRVFLeG", blizzard.US, blizzard.EnUS)
-
-  err := blizz.AccessTokenRequest(ctx)
-  if err != nil {
-    fmt.Println(err)
-  }
-
-  return blizz
-}
-
-// WowAuctions gets all auctions from a realm
-func WowAuctions(realmToGet string) *wowgd.AuctionHouse {
-  ctx := context.Background()
-
-  client := getClient()
-
-  realm, _, err := client.WoWRealm(ctx, realmToGet)
-  if err != nil {
-    log.Fatal(err)
-  }
-
-  wowAuctions, _, err := client.WoWAuctions(ctx, realm.ID)
-  if err != nil {
-    log.Fatal(err)
-  }
-
-  return wowAuctions
 }

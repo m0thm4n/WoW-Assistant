@@ -22,25 +22,11 @@
       {{template "templates/nav" .}}
     </header>
     <!-- Add your site or application content here -->
-    <div class="container">
-      <form>
-        <label for="realmWanted">Choose the realm you want to view the auction house for: </label>
-        <select name="realm" id="realm" onchange="ShowHideDiv()">
-          {{range $key, $value := .realms}}
-            <option value="{{ $value }}">{{ $key }}</option>
-          {{end}}
-        </select>
-        <br />
-      </form>
-    </div>
+
 
     <div class="container" id="auctionHouse" style="display: none">
       <br />
-      <script>
-        e = document.getElementById("realm")
-        var realm = e.value
-        {{$var := auction "realm"}}
-      </script>
+        {{ .auctions }}
     </div>
 
     {{template "templates/footer" .}}

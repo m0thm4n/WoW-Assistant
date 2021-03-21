@@ -242,6 +242,14 @@ var realms = map[string]interface{}{
   "Zuluhead": "zuluhead",
 }
 
+// {
+//    id: 110241996,
+//    item: {id: 172092, context: ""},
+//    buyout: 47,
+//    quantity: 21000,
+//    time left: VERY_LONG
+// }
+
 type Realm struct {
   RealmName string `form:"realm-name"`
 }
@@ -302,15 +310,13 @@ func SetupRouter() *gin.Engine {
 
     c.HTML(http.StatusOK, "auction.gohtml", gin.H{
       "title": "Auction House",
-      "auctions": auctionHouseList,
+      "auctions": auctionHouseList.Auctions,
     })
 
-    //c.JSON(200, gin.H{
-    //  "message": string(jsonAuctions),
-    //})
-    //if err != nil {
-    //  log.Fatal(err)
-    //}
+    //c.JSON(http.StatusOK, gin.H{
+    //  "code": http.StatusOK,
+    //  "id": string(ids),
+    //  })
   })
 
 	apiRoutes := r.Group("/api")

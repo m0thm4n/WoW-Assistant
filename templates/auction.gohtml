@@ -24,11 +24,20 @@
     <!-- Add your site or application content here -->
 
 
-    <div class="container" id="auctionHouse" style="display: none">
+    <div class="container" id="auctionHouse">
       <br />
-        {{ range $i, $v := .Auctions }}
-          <p>{{ $v.ID }}</p>
-        {{ end }}
+      {{ range .auctions }}
+        <strong><p>ID: {{ .ID }}</p></strong>
+        <br>
+        <strong><p>Item ID: {{ .Item.ID }}</p></strong>
+        <br>
+        <strong><p>Quantity: {{ .Quantity }}</p></strong>
+        <br>
+        <strong><p>Unit Price: {{ .UnitPrice }}</p></strong>
+        <br>
+        <strong><p>Time Left: {{ .TimeLeft}}</p></strong>
+        <br>
+      {{ end }}
     </div>
 
     {{template "templates/footer" .}}

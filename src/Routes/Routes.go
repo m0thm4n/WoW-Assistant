@@ -3,8 +3,6 @@ package Routes
 import (
   "WoW-Assistant/src/Controllers"
   "WoW-Assistant/src/Wow"
-  "encoding/json"
-
   // "WoW-Assistant/src/Wow"
   "fmt"
   "github.com/gin-gonic/gin"
@@ -44,9 +42,9 @@ var realms = map[string]interface{}{
   "Black Dragonflight": "black dragonflight",
   "Blackhand": "blackhand",
   "Blackrock": "blackrock",
-  "Blackwater Raiders": "blackwater raiders",
+  "Blackwater Raiders": "blackwater-raiders",
   "Blackwing Lair": "blackwing lair",
-  "Blade's Edge": "blade's edge",
+  "Blade's Edge": "blades-edge",
   "Bleeding Hollow": "bleeding hollow",
   "Blood Furnace": "blood furnace",
   "Bloodhoof": "bloodhoof",
@@ -290,35 +288,29 @@ func SetupRouter() *gin.Engine {
 
     realmStruct.RealmName = c.Request.FormValue("realm")
 
+    fmt.Println(realmStruct.RealmName)
+
     // realmStruct.RealmName = realm
 
     c.Redirect(301, "http://localhost:8080/auction")
   })
 
   r.GET("/auction", func(c *gin.Context) {
-    fmt.Println(realmStruct.RealmName)
-
     auctionHouseList := Wow.WowAuctions(realmStruct.RealmName)
 
     fmt.Println(auctionHouseList.Auctions[0])
-
-    jsonAuctions, err := json.Marshal(auctionHouseList.Auctions)
-    if err != nil {
-      log.Fatal(err)
-    }
 
     c.HTML(http.StatusOK, "auction.gohtml", gin.H{
       "title": "Auction House",
       "auctions": auctionHouseList,
     })
 
-    c.JSON(200, gin.H{
-      "code": http.StatusOK,
-      "message": string(jsonAuctions),
-    })
-    if err != nil {
-      log.Fatal(err)
-    }
+    //c.JSON(200, gin.H{
+    //  "message": string(jsonAuctions),
+    //})
+    //if err != nil {
+    //  log.Fatal(err)
+    //}
   })
 
 	apiRoutes := r.Group("/api")

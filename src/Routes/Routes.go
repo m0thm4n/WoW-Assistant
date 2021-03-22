@@ -3,10 +3,13 @@ package Routes
 import (
   "WoW-Assistant/src/Controllers"
   "WoW-Assistant/src/Wow"
+  "html/template"
+
   // "WoW-Assistant/src/Wow"
   "fmt"
   "github.com/gin-gonic/gin"
   "log"
+  "sync"
   // "github.com/gin-contrib/multitemplate"
   "net/http"
 )
@@ -250,6 +253,9 @@ var realms = map[string]interface{}{
 //    time left: VERY_LONG
 // }
 
+var items []string
+var id int
+
 type Realm struct {
   RealmName string `form:"realm-name"`
 }
@@ -270,6 +276,10 @@ func SetupRouter() *gin.Engine {
   //server.LoadHTMLGlob("templates/*.gohtml")
 
   r.LoadHTMLGlob("templates/*.gohtml")
+
+  r.SetFuncMap(template.FuncMap{
+    "getItems": getItems,
+  })
 
   r.Static("/img", "templates/img/")
   r.Static("/css", "templates/css/")
@@ -306,11 +316,15 @@ func SetupRouter() *gin.Engine {
   r.GET("/auction", func(c *gin.Context) {
     auctionHouseList := Wow.WowAuctions(realmStruct.RealmName)
 
+    fmt.Println(items)
+
     fmt.Println(auctionHouseList.Auctions[0])
 
     c.HTML(http.StatusOK, "auction.gohtml", gin.H{
       "title": "Auction House",
       "auctions": auctionHouseList.Auctions,
+      "items": items,
+      "getItems": getItems,
     })
 
     //c.JSON(http.StatusOK, gin.H{
@@ -335,4 +349,18 @@ func SetupRouter() *gin.Engine {
   // }
 
 	return r
+}
+
+func getItems(id int) []string {
+  var wg sync.WaitGroup
+
+  defer wg.Done()
+
+  item := Wow.GetItem(id)
+
+  fmt.Println(item)
+
+  items = append(items, item.Name)
+
+  return items
 }

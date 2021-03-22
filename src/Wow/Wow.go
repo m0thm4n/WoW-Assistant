@@ -1,9 +1,9 @@
 package Wow
 
 import (
+  "context"
   "fmt"
   "github.com/FuzzyStatic/blizzard/v2"
-  "context"
   "github.com/FuzzyStatic/blizzard/v2/wowgd"
   "log"
 )
@@ -40,4 +40,17 @@ func WowAuctions(realmToGet string) *wowgd.AuctionHouse {
   }
 
   return wowAuctions
+}
+
+func GetItem(id int) *wowgd.Item {
+  ctx := context.Background()
+
+  client := getClient()
+
+  item, _, err := client.WoWItem(ctx, id)
+  if err != nil {
+    log.Fatal(err)
+  }
+
+  return item
 }

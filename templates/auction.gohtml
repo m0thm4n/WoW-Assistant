@@ -29,7 +29,8 @@
       {{ range .auctions }}
         <strong><p>ID: {{ .ID }}</p></strong>
         <br>
-        <strong><p>Item ID: {{ .Item.ID }}</p></strong>
+        {{ $v := .getItems .Item.ID }}
+        <strong><p>Item: {{ $v }}</p></strong>
         <br>
         <strong><p>Quantity: {{ .Quantity }}</p></strong>
         <br>

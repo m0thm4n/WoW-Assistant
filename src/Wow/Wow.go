@@ -1,56 +1,65 @@
 package Wow
 
 import (
-  "context"
-  "fmt"
-  "github.com/FuzzyStatic/blizzard/v2"
-  "github.com/FuzzyStatic/blizzard/v2/wowgd"
-  "log"
+	"context"
+	"fmt"
+	"log"
+
+	"github.com/FuzzyStatic/blizzard/v2"
+	"github.com/FuzzyStatic/blizzard/v2/wowgd"
+
+	"WoW-Assistant/src/Config"
 )
 
-
-
 func getClient() *blizzard.Client {
-  ctx := context.Background()
+	config := Config.LoadConfiguration("config.json")
+	clientID := config.ClientID
+	key := config.Key
 
-  blizz := blizzard.NewClient("d2a18a7c4f364725822fc2ef3740ecc5", "Bv5t7l2AifIWsgESnosKhUbYnlRVFLeG", blizzard.US, blizzard.EnUS)
+	ctx := context.Background()
 
-  err := blizz.AccessTokenRequest(ctx)
-  if err != nil {
-    fmt.Println(err)
-  }
+	blizz := blizzard.NewClient(clientID, key, blizzard.US, blizzard.EnUS)
 
-  return blizz
+	err := blizz.AccessTokenRequest(ctx)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	return blizz
 }
 
 // WowAuctions gets all auctions from a realm
 func WowAuctions(realmToGet string) *wowgd.AuctionHouse {
-  ctx := context.Background()
+	ctx := context.Background()
 
-  client := getClient()
+	client := getClient()
 
-  realm, _, err := client.WoWRealm(ctx, realmToGet)
-  if err != nil {
-    log.Fatal(err)
-  }
+	realm, _, err := client.WoWRealm(ctx, realmToGet)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-  wowAuctions, _, err := client.WoWAuctions(ctx, realm.ID)
-  if err != nil {
-    log.Fatal(err)
-  }
+	wowAuctions, _, err := client.WoWAuctions(ctx, realm.ID)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-  return wowAuctions
+	return wowAuctions
 }
 
 func GetItem(id int) *wowgd.Item {
-  ctx := context.Background()
+	ctx := context.Background()
 
-  client := getClient()
+	client := getClient()
 
-  item, _, err := client.WoWItem(ctx, id)
-  if err != nil {
-    log.Fatal(err)
-  }
+	item, _, err := client.WoWItem(ctx, id)
+	if err != nil {
+		ignoreError("Got 404 back from API skipping", err)
+	}
 
-  return item
+	return item
+}
+
+func ignoreError(val interface{}, err error) interface{} {
+	return val
 }

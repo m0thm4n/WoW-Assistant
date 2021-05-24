@@ -29,15 +29,18 @@
       {{ range .auctions }}
         <strong><p>ID: {{ .ID }}</p></strong>
         <br>
-        {{ $v := .getItems .Item.ID }}
-        <strong><p>Item: {{ $v }}</p></strong>
+        <strong><p>Item: {{ .Item }}</p></strong>
         <br>
         <strong><p>Quantity: {{ .Quantity }}</p></strong>
         <br>
         <strong><p>Unit Price: {{ .UnitPrice }}</p></strong>
         <br>
-        <strong><p>Time Left: {{ .TimeLeft}}</p></strong>
+        <strong><p>Time Left: {{ .TimeLeft }}</p></strong>
         <br>
+      {{ end }}
+
+      {{ range .items }}
+        <strong><p>Item Name: {{ .Name }}</p></strong>
       {{ end }}
     </div>
 

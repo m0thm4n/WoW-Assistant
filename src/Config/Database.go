@@ -2,50 +2,51 @@ package Config
 
 import (
 	"fmt"
+	"log"
+
 	"github.com/jinzhu/gorm"
-  r "gopkg.in/rethinkdb/rethinkdb-go.v6"
-  "log"
+	r "gopkg.in/rethinkdb/rethinkdb-go.v6"
 )
 
 var DB *gorm.DB
 
 // DBConfig represents db Configuration
 type DBConfig struct {
-	Host		string
-	Port		int
-	User		string
-	DBName		string
-	Password	string
+	Host     string
+	Port     int
+	User     string
+	DBName   string
+	Password string
 }
 
 type RethinkConfig struct {
-  Address   string
-  Database  string
-  Username  string
-  Password  string
+	Address  string
+	Database string
+	Username string
+	Password string
 }
 
 func BuildDBConfig() *DBConfig {
 	dbConfig := DBConfig{
-		Host: 		"10.11.13.38",
-		Port: 		3306,
-		User: 		"root",
-		Password:	"Babycakes15!",
-		DBName:		"wow",
+		Host:     "10.11.13.119",
+		Port:     3306,
+		User:     "root",
+		Password: "Babycakes15!",
+		DBName:   "wow",
 	}
 
 	return &dbConfig
 }
 
 func BuildRethinkConfig() *RethinkConfig {
-  dbConfig := RethinkConfig{
-    Address:    "10.11.13.38",
-    Username:   "root",
-    Password:   "Babycakes15!",
-    Database:   "wow",
-  }
+	dbConfig := RethinkConfig{
+		Address:  "10.11.13.119",
+		Username: "root",
+		Password: "Babycakes15!",
+		Database: "wow",
+	}
 
-  return &dbConfig
+	return &dbConfig
 }
 
 func DbURL(dbConfig *DBConfig) string {
@@ -56,21 +57,21 @@ func DbURL(dbConfig *DBConfig) string {
 		dbConfig.Host,
 		dbConfig.Port,
 		dbConfig.DBName,
-		)
+	)
 }
 
 func ConntectRethink(dbConfig *RethinkConfig) *r.Session {
-  var err error
+	var err error
 
-  session, err := r.Connect(r.ConnectOpts{
-    Address: dbConfig.Address,
-    Database: dbConfig.Database,
-    Username: dbConfig.Username,
-    Password: dbConfig.Password,
-  })
-  if err != nil {
-    log.Fatalln(err.Error())
-  }
+	session, err := r.Connect(r.ConnectOpts{
+		Address:  dbConfig.Address,
+		Database: dbConfig.Database,
+		Username: dbConfig.Username,
+		Password: dbConfig.Password,
+	})
+	if err != nil {
+		log.Fatalln(err.Error())
+	}
 
-  return session
+	return session
 }

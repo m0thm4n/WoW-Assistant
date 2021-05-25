@@ -22,6 +22,7 @@ func main() {
 	defer Config.DB.Close()
 	Config.DB.AutoMigrate(&Models.User{})
 	Config.DB.AutoMigrate(&Models.Item{})
+	fmt.Println("AutoMigrate complete")
 
 	r := Routes.SetupRouter()
 

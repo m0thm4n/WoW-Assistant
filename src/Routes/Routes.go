@@ -147,6 +147,7 @@ var realms = map[string]interface{}{
 	"Laughing Skull":      "laughing skull",
 	"Lethon":              "lethon",
 	"Lightbringer":        "lightbringer",
+    "Lightninmaelstrom":   "lightninmaelstrom",
 	"Lightning's Blade":   "lightning's blade",
 	"Lightninghoof":       "lightninghoof",
 	"Llane":               "llane",
@@ -368,7 +369,10 @@ func getItemName(auctions *wowgd.AuctionHouse) {
   for i, _ := range auctions.Auctions {
 		itemValue := getItems(auctions.Auctions[i].Item.ID)
 
-		item := Models.Item{ItemID: auctions.Auctions[i].Item.ID,
+		fmt.Println(realmStruct.RealmName)
+
+		item := Models.Item{
+		  ItemID: auctions.Auctions[i].Item.ID,
 		  Name: itemValue.Name,
 		  SubclassName: itemValue.ItemSubclass.Name,
 		  SubclassID: itemValue.ItemSubclass.ID,
@@ -381,10 +385,16 @@ func getItemName(auctions *wowgd.AuctionHouse) {
 		  InventoryTypeName: itemValue.InventoryType.Name,
 		  InventoryType: itemValue.InventoryType.Type,
 		  PurchasePrice: itemValue.PurchasePrice,
-		  SellPrice: itemValue.SellPrice,
-		  MaxCount: itemValue.MaxCount,
-		  IsEquippable: itemValue.IsEquippable,
-		  IsStackable: itemValue.IsStackable,
+		  SellPrice:     itemValue.SellPrice,
+		  MaxCount:      itemValue.MaxCount,
+		  IsEquippable:  itemValue.IsEquippable,
+		  IsStackable:   itemValue.IsStackable,
+      AuctionID:     auctions.Auctions[i].ID,
+      Buyout:        auctions.Auctions[i].Buyout,
+      Quantity:      auctions.Auctions[i].Quantity,
+      UnitPrice:     auctions.Auctions[i].UnitPrice,
+      TimeLeft:      auctions.Auctions[i].TimeLeft,
+      Table: realmStruct.RealmName,
 		}
 
 		fmt.Println(item)

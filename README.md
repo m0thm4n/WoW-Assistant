@@ -1,8 +1,8 @@
 # Wow Assistant
 
-##Aution House
+## Aution House
 
-######The following list is options you get from the Auction house
+###### The following list is options you get from the Auction house
 
 1. The ID of an item
 2. The name of an item

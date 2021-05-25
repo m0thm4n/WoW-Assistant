@@ -389,13 +389,13 @@ func getItemName(auctions *wowgd.AuctionHouse) {
 		  MaxCount:      itemValue.MaxCount,
 		  IsEquippable:  itemValue.IsEquippable,
 		  IsStackable:   itemValue.IsStackable,
-      AuctionID:     auctions.Auctions[i].ID,
-      Buyout:        auctions.Auctions[i].Buyout,
-      Quantity:      auctions.Auctions[i].Quantity,
-      UnitPrice:     auctions.Auctions[i].UnitPrice,
-      TimeLeft:      auctions.Auctions[i].TimeLeft,
-      Table: realmStruct.RealmName,
-		}
+          AuctionID:     auctions.Auctions[i].ID,
+          Buyout:        auctions.Auctions[i].Buyout,
+          Quantity:      auctions.Auctions[i].Quantity,
+          TimeLeft:      auctions.Auctions[i].TimeLeft,
+          // UnitPrice:     auctions.Auctions[i].UnitPrice,
+          Table: realmStruct.RealmName,
+        }
 
 		fmt.Println(item)
 

@@ -26,7 +26,7 @@ type Item struct {
   AuctionID int
   Buyout int
   Quantity int
-  UnitPrice int
+  // UnitPrice int
   TimeLeft wowgd.TimeLeft
   Table    string `gorm:"-"`
 }

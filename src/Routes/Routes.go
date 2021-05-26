@@ -1,23 +1,23 @@
 package Routes
 
 import (
-  "WoW-Assistant/src/Controllers"
-  "WoW-Assistant/src/Models"
-  "WoW-Assistant/src/Wow"
-  "html/template"
+    "WoW-Assistant/src/Controllers"
+    "WoW-Assistant/src/Models"
+    "WoW-Assistant/src/Wow"
+    "github.com/Masterminds/sprig"
+    "go.mongodb.org/mongo-driver/bson/primitive"
+    "html/template"
 
-  "github.com/Masterminds/sprig"
+    // "WoW-Assistant/src/Wow"
+    "fmt"
+    "log"
 
-  // "WoW-Assistant/src/Wow"
-  "fmt"
-  "log"
+    "github.com/gin-gonic/gin"
 
-  "github.com/gin-gonic/gin"
+    // "github.com/gin-contrib/multitemplate"
+    "net/http"
 
-  // "github.com/gin-contrib/multitemplate"
-  "net/http"
-
-  "github.com/FuzzyStatic/blizzard/v2/wowgd"
+    "github.com/FuzzyStatic/blizzard/v2/wowgd"
 )
 
 var realms = map[string]interface{}{
@@ -347,6 +347,17 @@ func SetupRouter() *gin.Engine {
 		//  })
 	})
 
+	//authController := new(Controllers.AuthController)
+	//r.POST("/login", authController.Login)
+	//r.POST("/signup", authController.Signup)
+    //
+	//authGroup := r.Group("/")
+	//{
+	//    authGroup.Use(Middlewares.Authentication())
+	//    authGroup.GET("/profile", authController.Profile)
+    //}
+
+
 	apiRoutes := r.Group("/api")
 	{
 		apiRoutes.GET("users", Controllers.GetUsers)
@@ -366,44 +377,102 @@ func SetupRouter() *gin.Engine {
 }
 
 func getItemName(auctions *wowgd.AuctionHouse) {
-  for i, _ := range auctions.Auctions {
+    var items []interface{}
+
+    for i, _ := range auctions.Auctions {
 		itemValue := getItems(auctions.Auctions[i].Item.ID)
 
 		fmt.Println(realmStruct.RealmName)
 
-		item := Models.Item{
-		  ItemID: auctions.Auctions[i].Item.ID,
-		  Name: itemValue.Name,
-		  SubclassName: itemValue.ItemSubclass.Name,
-		  SubclassID: itemValue.ItemSubclass.ID,
-		  QualityType: itemValue.Quality.Type,
-		  QualityName: itemValue.Quality.Name,
-		  Level: itemValue.Level,
-		  RequiredLevel: itemValue.RequiredLevel,
-		  ItemClassName: itemValue.ItemClass.Name,
-		  ItemClassID: itemValue.ItemClass.ID,
-		  InventoryTypeName: itemValue.InventoryType.Name,
-		  InventoryType: itemValue.InventoryType.Type,
-		  PurchasePrice: itemValue.PurchasePrice,
-		  SellPrice:     itemValue.SellPrice,
-		  MaxCount:      itemValue.MaxCount,
-		  IsEquippable:  itemValue.IsEquippable,
-		  IsStackable:   itemValue.IsStackable,
-          AuctionID:     auctions.Auctions[i].ID,
-          Buyout:        auctions.Auctions[i].Buyout,
-          Quantity:      auctions.Auctions[i].Quantity,
-          TimeLeft:      auctions.Auctions[i].TimeLeft,
-          // UnitPrice:     auctions.Auctions[i].UnitPrice,
-          Table: realmStruct.RealmName,
+		//itemSQL := Models.ItemSQL{
+		//  ItemID: auctions.Auctions[i].Item.ID,
+		//  Name: itemValue.Name,
+		//  SubclassName: itemValue.ItemSubclass.Name,
+		//  SubclassID: itemValue.ItemSubclass.ID,
+		//  QualityType: itemValue.Quality.Type,
+		//  QualityName: itemValue.Quality.Name,
+		//  Level: itemValue.Level,
+		//  RequiredLevel: itemValue.RequiredLevel,
+		//  ItemClassName: itemValue.ItemClass.Name,
+		//  ItemClassID: itemValue.ItemClass.ID,
+		//  InventoryTypeName: itemValue.InventoryType.Name,
+		//  InventoryType: itemValue.InventoryType.Type,
+		//  PurchasePrice: itemValue.PurchasePrice,
+		//  SellPrice:     itemValue.SellPrice,
+		//  MaxCount:      itemValue.MaxCount,
+		//  IsEquippable:  itemValue.IsEquippable,
+		//  IsStackable:   itemValue.IsStackable,
+        //  AuctionID:     auctions.Auctions[i].ID,
+        //  Buyout:        auctions.Auctions[i].Buyout,
+        //  Quantity:      auctions.Auctions[i].Quantity,
+        //  TimeLeft:      auctions.Auctions[i].TimeLeft,
+        //  // UnitPrice:     auctions.Auctions[i].UnitPrice,
+        //  Table: realmStruct.RealmName,
+        //}
+        //
+		//fmt.Println(itemSQL)
+
+        itemMongo := Models.ItemMongo{
+            ID:        primitive.NewObjectID(),
+            ItemID: auctions.Auctions[i].Item.ID,
+            Name: itemValue.Name,
+            SubclassName: itemValue.ItemSubclass.Name,
+            SubclassID: itemValue.ItemSubclass.ID,
+            QualityType: itemValue.Quality.Type,
+            QualityName: itemValue.Quality.Name,
+            Level: itemValue.Level,
+            RequiredLevel: itemValue.RequiredLevel,
+            ItemClassName: itemValue.ItemClass.Name,
+            ItemClassID: itemValue.ItemClass.ID,
+            InventoryTypeName: itemValue.InventoryType.Name,
+            InventoryType: itemValue.InventoryType.Type,
+            PurchasePrice: itemValue.PurchasePrice,
+            SellPrice:     itemValue.SellPrice,
+            MaxCount:      itemValue.MaxCount,
+            IsEquippable:  itemValue.IsEquippable,
+            IsStackable:   itemValue.IsStackable,
+            AuctionID:     auctions.Auctions[i].ID,
+            Buyout:        auctions.Auctions[i].Buyout,
+            Quantity:      auctions.Auctions[i].Quantity,
+            UnitPrice:     auctions.Auctions[i].UnitPrice,
+            TimeLeft:      auctions.Auctions[i].TimeLeft,
+            Table: realmStruct.RealmName,
         }
 
-		fmt.Println(item)
+        items = append(items, itemMongo)
 
-    err := Models.CreateItem(&item)
-    if err != nil {
-      log.Fatal(err)
+        fmt.Println(itemMongo)
+
+        fmt.Println(items)
+
+        //errSQL := Models.CreateItem(&itemSQL)
+        //if errSQL != nil {
+        //  log.Fatal(errSQL)
+        //}
     }
-	}
+
+    errMongo := Models.Create(items, realmStruct.RealmName)
+    if errMongo != nil {
+        log.Fatal(errMongo)
+    }
+
+    //pythonExecutable, err := exec.LookPath("python")
+    //if err != nil {
+    //    log.Fatal(err)
+    //}
+    //
+    //cmd := &exec.Cmd{
+    //    Path:   pythonExecutable,
+    //    Args:   []string{pythonExecutable, "E:\\workspace\\go\\src\\WoW-Assistant\\python\\db-builder\\start.py", realmStruct.RealmName},
+    //    Stdout: os.Stdout,
+    //    Stderr: os.Stdout,
+    //}
+    //
+    //if err := cmd.Run(); err != nil {
+    //    fmt.Println("Error: ", err)
+    //}
+    //
+    //fmt.Println("Collection name changed to: {}", realmStruct.RealmName)
 }
 
 func getItems(id int) *wowgd.Item {

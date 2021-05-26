@@ -8,7 +8,7 @@ import (
 
 // GetItems ... Get all Items
 func GetItems(c *gin.Context) {
-  var item []Models.Item
+  var item []Models.ItemSQL
   err := Models.GetAllItems(&item)
   if err != nil {
     c.AbortWithStatus(http.StatusNotFound)

@@ -1,13 +1,12 @@
 package main
 
 import (
-	"WoW-Assistant/src/Config"
-	"WoW-Assistant/src/Models"
-	"WoW-Assistant/src/Routes"
-	"WoW-Assistant/src/Wow"
-	"fmt"
-	// "WoW-Assistant/src/Wow"
-	"github.com/jinzhu/gorm"
+    "WoW-Assistant/src/Config"
+    "WoW-Assistant/src/Models"
+    "WoW-Assistant/src/Routes"
+    "fmt"
+    // "WoW-Assistant/src/Wow"
+    "github.com/jinzhu/gorm"
 )
 
 var err error
@@ -33,8 +32,8 @@ func main() {
   //    time left: VERY_LONG
   // }
 
-  auctions := Wow.WowAuctions("aegwynn")
-  fmt.Println(auctions.Auctions[0])
+  //auctions := Wow.Auctions("aegwynn")
+  //fmt.Println(auctions.Auctions[0])
 
   // running
   r.Run()

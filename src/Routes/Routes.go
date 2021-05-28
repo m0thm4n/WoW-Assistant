@@ -2,12 +2,13 @@ package Routes
 
 import (
     "WoW-Assistant/src/Controllers"
+    "WoW-Assistant/src/Middlewares"
     "WoW-Assistant/src/Models"
     "WoW-Assistant/src/Wow"
     "github.com/Masterminds/sprig"
     "go.mongodb.org/mongo-driver/bson/primitive"
     "html/template"
-
+    "sync"
     // "WoW-Assistant/src/Wow"
     "fmt"
     "log"
@@ -322,17 +323,26 @@ func SetupRouter() *gin.Engine {
 	})
 
 	r.GET("/auction", func(c *gin.Context) {
-		auctionHouseList := Wow.WowAuctions(realmStruct.RealmName)
+	    var wg sync.WaitGroup
+
+	    client := Wow.GetClient()
+
+		auctionHouseList := Wow.Auctions(realmStruct.RealmName, client)
 
 		fmt.Println(items)
 
 		fmt.Println(auctionHouseList.Auctions[0].Item.ID)
 
-		item := Wow.GetItem(auctionHouseList.Auctions[0].Item.ID)
+		item := Wow.GetItem(auctionHouseList.Auctions[0].Item.ID, client, wg)
 
 		fmt.Print(item.Name)
 
-		getItemName(auctionHouseList)
+		fmt.Println(len(auctionHouseList.Auctions))
+		wg.Add(len(auctionHouseList.Auctions))
+
+		go getItemName(auctionHouseList)
+
+        wg.Wait()
 
 		c.HTML(http.StatusOK, "auction.gohtml", gin.H{
 			"title":    "Auction House",
@@ -344,18 +354,18 @@ func SetupRouter() *gin.Engine {
 		//c.JSON(http.StatusOK, gin.H{
 		//  "code": http.StatusOK,
 		//  "id": string(ids),
-		//  })
+		//})
 	})
 
-	//authController := new(Controllers.AuthController)
-	//r.POST("/login", authController.Login)
-	//r.POST("/signup", authController.Signup)
-    //
-	//authGroup := r.Group("/")
-	//{
-	//    authGroup.Use(Middlewares.Authentication())
-	//    authGroup.GET("/profile", authController.Profile)
-    //}
+	authController := new(Controllers.AuthController)
+	r.POST("/login", authController.Login)
+	r.POST("/signup", authController.Signup)
+
+	authGroup := r.Group("/")
+	{
+	   authGroup.Use(Middlewares.Authentication())
+	   authGroup.GET("/profile", authController.Profile)
+    }
 
 
 	apiRoutes := r.Group("/api")
@@ -377,31 +387,36 @@ func SetupRouter() *gin.Engine {
 }
 
 func getItemName(auctions *wowgd.AuctionHouse) {
-    var items []interface{}
+    items := make([]interface{}, len(auctions.Auctions))
+    var wg sync.WaitGroup
+
+    defer wg.Done()
+
+    fmt.Println(len(auctions.Auctions))
 
     for i, _ := range auctions.Auctions {
-		itemValue := getItems(auctions.Auctions[i].Item.ID)
+        itemValue := getItems(auctions.Auctions[i].Item.ID)
 
-		fmt.Println(realmStruct.RealmName)
+        fmt.Println(realmStruct.RealmName)
 
-		//itemSQL := Models.ItemSQL{
-		//  ItemID: auctions.Auctions[i].Item.ID,
-		//  Name: itemValue.Name,
-		//  SubclassName: itemValue.ItemSubclass.Name,
-		//  SubclassID: itemValue.ItemSubclass.ID,
-		//  QualityType: itemValue.Quality.Type,
-		//  QualityName: itemValue.Quality.Name,
-		//  Level: itemValue.Level,
-		//  RequiredLevel: itemValue.RequiredLevel,
-		//  ItemClassName: itemValue.ItemClass.Name,
-		//  ItemClassID: itemValue.ItemClass.ID,
-		//  InventoryTypeName: itemValue.InventoryType.Name,
-		//  InventoryType: itemValue.InventoryType.Type,
-		//  PurchasePrice: itemValue.PurchasePrice,
-		//  SellPrice:     itemValue.SellPrice,
-		//  MaxCount:      itemValue.MaxCount,
-		//  IsEquippable:  itemValue.IsEquippable,
-		//  IsStackable:   itemValue.IsStackable,
+        //itemSQL := Models.ItemSQL{
+        //  ItemID: auctions.Auctions[i].Item.ID,
+        //  Name: itemValue.Name,
+        //  SubclassName: itemValue.ItemSubclass.Name,
+        //  SubclassID: itemValue.ItemSubclass.ID,
+        //  QualityType: itemValue.Quality.Type,
+        //  QualityName: itemValue.Quality.Name,
+        //  Level: itemValue.Level,
+        //  RequiredLevel: itemValue.RequiredLevel,
+        //  ItemClassName: itemValue.ItemClass.Name,
+        //  ItemClassID: itemValue.ItemClass.ID,
+        //  InventoryTypeName: itemValue.InventoryType.Name,
+        //  InventoryType: itemValue.InventoryType.Type,
+        //  PurchasePrice: itemValue.PurchasePrice,
+        //  SellPrice:     itemValue.SellPrice,
+        //  MaxCount:      itemValue.MaxCount,
+        //  IsEquippable:  itemValue.IsEquippable,
+        //  IsStackable:   itemValue.IsStackable,
         //  AuctionID:     auctions.Auctions[i].ID,
         //  Buyout:        auctions.Auctions[i].Buyout,
         //  Quantity:      auctions.Auctions[i].Quantity,
@@ -410,7 +425,7 @@ func getItemName(auctions *wowgd.AuctionHouse) {
         //  Table: realmStruct.RealmName,
         //}
         //
-		//fmt.Println(itemSQL)
+        //fmt.Println(itemSQL)
 
         itemMongo := Models.ItemMongo{
             ID:        primitive.NewObjectID(),
@@ -439,17 +454,19 @@ func getItemName(auctions *wowgd.AuctionHouse) {
             Table: realmStruct.RealmName,
         }
 
-        items = append(items, itemMongo)
-
-        fmt.Println(itemMongo)
-
-        fmt.Println(items)
+        go func() {
+            items[i] = &itemMongo
+            fmt.Println(itemMongo)
+            fmt.Println("Loop number for appending:", i)
+        }()
 
         //errSQL := Models.CreateItem(&itemSQL)
         //if errSQL != nil {
         //  log.Fatal(errSQL)
         //}
     }
+
+
 
     errMongo := Models.Create(items, realmStruct.RealmName)
     if errMongo != nil {
@@ -476,9 +493,13 @@ func getItemName(auctions *wowgd.AuctionHouse) {
 }
 
 func getItems(id int) *wowgd.Item {
-	item := Wow.GetItem(id)
+    var wg sync.WaitGroup
 
-  return item
+    client := Wow.GetClient()
+
+    item := Wow.GetItem(id, client, wg)
+
+    return item
 
 	// items = append(items, item.Name)
 

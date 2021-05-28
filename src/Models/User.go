@@ -4,6 +4,9 @@ import (
     "WoW-Assistant/src/Config"
     "fmt"
     _ "github.com/go-sql-driver/mysql"
+    "github.com/goonode/mogo"
+    "labix.org/v2/mgo/bson"
+    "errors"
 )
 
 type UserService struct {}
@@ -50,56 +53,56 @@ func DeleteUser(user *User, id string) (err error) {
 	return nil
 }
 
-////=================================================
-//// Mongo DB functions
-//
-//// Create is to register new user
-//func (userService *UserService) Create(user *(UserMongo)) error {
-//    conn := Config.GetConnection()
-//    defer conn.Session.Close()
-//
-//    doc := mogo.NewDoc(UserMongo{}).(*(UserMongo))
-//    err := doc.FindOne(bson.M{"email": user.Email}, doc)
-//    if err == nil {
-//        return errors.New("Already Exist")
-//    }
-//    userModel := mogo.NewDoc(user).(*(UserMongo))
-//    err = mogo.Save(userModel)
-//    if vErr, ok := err.(*mogo.ValidationError); ok {
-//        return vErr
-//    }
-//    return err
-//}
-//
-//// Delete a user from DB
-//func (userService *UserService) Delete(email string) error {
-//    user, _ := userService.FindByEmail(email)
-//    conn := Config.GetConnection()
-//    defer conn.Session.Close()
-//    err := user.Remove()
-//    return err
-//}
-//
-//// Find user
-//func (userService *UserService) Find(user *(UserMongo)) (*UserMongo, error) {
-//    conn := Config.GetConnection()
-//    defer conn.Session.Close()
-//
-//    doc := mogo.NewDoc(UserMongo{}).(*(UserMongo))
-//    err := doc.FindOne(bson.M{"email": user.Email}, doc)
-//
-//    if err != nil {
-//        return nil, err
-//    }
-//    return doc, nil
-//}
-//
-//// Find user from email
-//func (userService *UserService) FindByEmail(email string) (*UserMongo, error) {
-//    conn := Config.GetConnection()
-//    defer conn.Session.Close()
-//
-//    user := new(UserMongo)
-//    user.Email = email
-//    return userService.Find(user)
-//}
+//=================================================
+// Mongo DB functions
+
+// Create is to register new user
+func (userService *UserService) Create(user *(UserMongo)) error {
+   conn := Config.GetConnection()
+   defer conn.Session.Close()
+
+   doc := mogo.NewDoc(UserMongo{}).(*(UserMongo))
+   err := doc.FindOne(bson.M{"email": user.Email}, doc)
+   if err == nil {
+       return errors.New("Already Exist")
+   }
+   userModel := mogo.NewDoc(user).(*(UserMongo))
+   err = mogo.Save(userModel)
+   if vErr, ok := err.(*mogo.ValidationError); ok {
+       return vErr
+   }
+   return err
+}
+
+// Delete a user from DB
+func (userService *UserService) Delete(email string) error {
+   user, _ := userService.FindByEmail(email)
+   conn := Config.GetConnection()
+   defer conn.Session.Close()
+   err := user.Remove()
+   return err
+}
+
+// Find user
+func (userService *UserService) Find(user *(UserMongo)) (*UserMongo, error) {
+   conn := Config.GetConnection()
+   defer conn.Session.Close()
+
+   doc := mogo.NewDoc(UserMongo{}).(*(UserMongo))
+   err := doc.FindOne(bson.M{"email": user.Email}, doc)
+
+   if err != nil {
+       return nil, err
+   }
+   return doc, nil
+}
+
+// Find user from email
+func (userService *UserService) FindByEmail(email string) (*UserMongo, error) {
+   conn := Config.GetConnection()
+   defer conn.Session.Close()
+
+   user := new(UserMongo)
+   user.Email = email
+   return userService.Find(user)
+}

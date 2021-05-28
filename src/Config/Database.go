@@ -83,7 +83,7 @@ func ConnectRethink(dbConfig *RethinkConfig) *r.Session {
 }
 
 // GetConnection is for get mongo connection
-func GetConnectionItem(realmName string) *mongo.Collection {
+func GetConnectionItem(collName string) *mongo.Collection {
     if mongoConnection == nil {
         connectionString := Utils.EnvVar("DB_CONNECTION_STRING", "")
         dbName := Utils.EnvVar("DB_NAME", "")
@@ -100,10 +100,29 @@ func GetConnectionItem(realmName string) *mongo.Collection {
 
         db := client.Database(dbName)
         fmt.Print("Connected to database")
-        coll := db.Collection(realmName)
+        coll := db.Collection(collName)
         fmt.Println("Created Collection")
 
         return coll
     }
     return nil
+}
+
+//GetConnection is for get mongo connection
+func GetConnection() *mogo.Connection {
+    if mongoConnection == nil {
+        connectionString := Utils.EnvVar("DB_CONNECTION_STRING", "")
+        dbName := Utils.EnvVar("DB_NAME", "")
+        config := &mogo.Config{
+            ConnectionString: connectionString,
+            Database:         dbName,
+        }
+        mongoConnection, err := mogo.Connect(config)
+        if err != nil {
+            log.Fatal(err)
+        } else {
+            return mongoConnection
+        }
+    }
+    return mongoConnection
 }
